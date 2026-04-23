@@ -1,0 +1,29 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore DevSecOpsLab.sln
+
+      - name: Build
+        run: dotnet build DevSecOpsLab.sln --no-restore --configuration Release
+
+      - name: Run tests
+        run: dotnet test DevSecOpsLab.sln --no-build --configuration Release
